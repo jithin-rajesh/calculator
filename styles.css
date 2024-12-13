@@ -13,13 +13,6 @@ body {
     color: white;
     font-family: "SF-Pro";
 }
-
-.container {
-    width: 360px;
-    background-color: black;
-    border-radius: 60px;
-    padding: 30px;
-}
 .operations {
     display: flex;
     flex-wrap: wrap;
@@ -29,15 +22,30 @@ body {
     font-size: 35px;
     margin: 20px 0px;
 }
+.container {
+    width: 360px;
+    background-color: black;
+    max-width: 360px;
+    border-radius: 60px;
+    padding: 30px;
+    overflow: hidden;
+}
+
 
 .answer {
-    display: flex;
-    justify-content: flex-end;
-    padding: 25px;
+    text-align: right;
+    padding-right: 30px;
+    white-space: nowrap;
+    transition: font-size 0.2s ease;
+    min-height: 60px;
+    overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
     font-size: 55px;
 }
 
 button {
+    font-family: "SF-Pro";
     color: white;
     background-color: #2A2A2C;
     border: none;
@@ -65,6 +73,10 @@ button:hover {
     transition: background-color 300ms
 }
 
+.equal {
+    background-color: #2891fa;
+    transition: background-color 300ms;
+}
 
 .operator:hover{
     background-color: #fabf66;
@@ -72,8 +84,14 @@ button:hover {
     filter: none;
 }
 
-button:active{
+.equal:hover {
+    background-color: #62adf8;
+    transition: background-color 300ms;
+    filter: none;
+}
 
+button:active{
     transition: border 1s;
     border: 1px solid white;
 }
+

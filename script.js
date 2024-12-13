@@ -18,44 +18,7 @@ function divide(a, b)
     return a / b;
 }
 
-function adjustFontSize() {
-    const display = answerText;
-    const container = display.parentElement;
-    const maxWidth = container.clientWidth - 60;
-    
-    // Get current font size if it exists, otherwise start at 55
-    let fontSize = parseInt(window.getComputedStyle(display).fontSize) || 55;
-    
-    // Decrease size if needed, using smaller steps
-    if (display.scrollWidth > maxWidth) {
-        while (display.scrollWidth > maxWidth && fontSize > 20) {  // Increased min size
-            fontSize -= 1;  // Smaller decrements
-            display.style.fontSize = `${fontSize}px`;
-        }
-    }
-    // Increase size if possible, using smaller steps
-    else if (display.scrollWidth <= maxWidth && fontSize < 55) {
-        while (display.scrollWidth <= maxWidth && fontSize < 55) {
-            fontSize += 1;  // Smaller increments
-            display.style.fontSize = `${fontSize}px`;
-        }
-        // Step back if we went too far
-        if (display.scrollWidth > maxWidth) {
-            fontSize -= 1;
-            display.style.fontSize = `${fontSize}px`;
-        }
-    }
-}
 
-// Only update when content changes
-let lastContent = '';
-function updateFontSize() {
-    const currentContent = answerText.textContent;
-    if (currentContent !== lastContent) {
-        adjustFontSize();
-        lastContent = currentContent;
-    }
-}
 
 window.addEventListener('load', adjustFontSize);
 let num1, num2, operator;
@@ -139,7 +102,6 @@ equals.addEventListener('click',function()
 {
     let result = operate(oldNum, currentNum, currentOperator);
     answerText.textContent = result;
-    updateFontSize();
     currentNum = result.toString();
     oldNum = '';
     isOperatorClicked = false;
@@ -151,7 +113,6 @@ clearFull.addEventListener('click', function()
     currentNum = '';
     oldNum = '';
     answerText.textContent = '0';
-    updateFontSize();
 });
 
 
