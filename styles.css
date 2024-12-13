@@ -1,0 +1,79 @@
+@font-face {
+    font-family: "SF-Pro";
+    src: url(fonts/SF-Pro.ttf);
+}
+
+
+body {
+    margin: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-family: "SF-Pro";
+}
+
+.container {
+    width: 360px;
+    background-color: black;
+    border-radius: 60px;
+    padding: 30px;
+}
+.operations {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.header {
+    font-size: 35px;
+    margin: 20px 0px;
+}
+
+.answer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 22px;
+    font-size: 40px;
+}
+
+button {
+    color: white;
+    background-color: #2A2A2C;
+    border: none;
+    font-size: 30px;
+    width: 75px;
+    height: 75px;
+    padding: 10px;
+    border-radius: 50%;
+    margin: 3px;
+    transition: filter 300ms; 
+    transition: border 1s;
+}
+
+.gray {
+    background-color: #5C5C5F;
+}
+
+
+button:hover {
+    filter: brightness(130%);
+    transition: filter 300ms; 
+}
+.operator {
+    background-color: #FF9F0A;
+    transition: background-color 300ms
+}
+
+
+.operator:hover{
+    background-color: #fabf66;
+    transition: background-color 300ms;
+    filter: none;
+}
+
+button:active{
+
+    transition: border 1s;
+    border: 1px solid white;
+}
