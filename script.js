@@ -1,55 +1,44 @@
-function add(a, b)
-{
+function add(a, b) {
     return a + b;
 }
 
-function subtract(a, b)
-{
+function subtract(a, b) {
     return a - b;
 }
 
-function multiply(a, b)
-{
+function multiply(a, b) {
     return a * b;
 }
 
-function divide(a, b)
-{
+function divide(a, b) {
     return a / b;
 }
 
+let currentNum = "";
+let oldNum = "";
+let currentOperator = "";
 
-
-window.addEventListener('load', adjustFontSize);
-let num1, num2, operator;
-let answer;
-function operate(num1, num2, operator)
-{
+function operate(num1, num2, operator) {
     num1 = parseFloat(num1);
     num2 = parseFloat(num2);
-    if (operator == "+")
-    {
-        answer =  add(num1,num2);
+    if (operator === "+") return parseFloat(add(num1, num2).toFixed(8)); 
+    if (operator === "-") return parseFloat(subtract(num1, num2).toFixed(8)); 
+    if (operator === "*") return parseFloat(multiply(num1, num2).toFixed(8)); 
+    if (operator === "/" && num2 !== 0) return parseFloat(divide(num1, num2).toFixed(8)); 
+    return "Really Dude?";
+}
+
+function fillText(num) {
+    if (num === '.' && currentNum.includes('.')) return; 
+    currentNum += "" + num;
+    answerText.textContent = exponential(currentNum);
+}
+
+function exponential(num) {
+    if (Math.abs(num) > 999999999 || Math.abs(num) < 0.0001) {
+        return Number.parseFloat(num).toExponential(4); 
     }
-    else if (operator == "-")
-    {
-        answer = subtract(num1, num2);
-    }
-    else if (operator == "*")
-    {
-        answer = multiply(num1, num2);
-    }
-    else
-    {
-        if(num2 == 0)
-        {
-            answer = "Really Dude?"
-        }
-        else {
-            answer = divide(num1, num2).toFixed(8);
-        }
-    }
-    return answer;
+    return num.toString().slice(0, 9); 
 }
 
 let numbers = document.querySelectorAll(".number");
@@ -57,62 +46,72 @@ let operators = document.querySelectorAll(".operator");
 let answerText = document.querySelector(".answer");
 let operatorDisplay = document.querySelector(".display");
 
-let currentNum = "";
-let oldNum = "";
+operators.forEach((operator) => {
+    operator.addEventListener("click", function(e) {
+        currentOperator = e.target.id;
+        operatorDisplay.textContent = currentOperator;
 
-function fillText(num)
-{
-    currentNum += "" + num;
-    answerText.textContent = currentNum;
-    updateFontSize();
-}
-
-let isOperatorClicked = "false";
-let currentOperator = "";
-operators.forEach((operator) =>
-    {
-        operator.addEventListener("click", function(e)
-        {
-            const clickedElement = e.target.id;
-            isOperatorClicked = true;
-            console.log(clickedElement);
-            currentOperator = clickedElement;
-            operatorDisplay.textContent = clickedElement;
-        });
-    });
-
-
-numbers.forEach((number) => {
-    number.addEventListener("click",function(e){
-        const clickedElement = e.target.id;
-        if(isOperatorClicked == true){
+        if (!oldNum) {
             oldNum = currentNum;
             currentNum = "";
-            isOperatorClicked = false;
+        } else if (currentNum) {
+            let result = operate(oldNum, currentNum, currentOperator);
+            answerText.textContent = exponential(result);
+            oldNum = result;
+            currentNum = "";
         }
-        fillText(clickedElement);
+        
     });
-    
+});
+
+numbers.forEach((number) => {
+    number.addEventListener("click", function(e) {
+        fillText(e.target.id);
+    });
 });
 
 let equals = document.querySelector(".equal");
-
-
-equals.addEventListener('click',function()
-{
+equals.addEventListener('click', function() {
+    if (!oldNum || !currentNum) return;
     let result = operate(oldNum, currentNum, currentOperator);
-    answerText.textContent = result;
+    answerText.textContent = exponential(result);
     currentNum = result.toString();
     oldNum = '';
-    isOperatorClicked = false;
+    currentOperator = '';
+    operatorDisplay.textContent = '';
 });
 
 let clearFull = document.querySelector("#clear");
-clearFull.addEventListener('click', function()
-{
+clearFull.addEventListener('click', function() {
     currentNum = '';
     oldNum = '';
     answerText.textContent = '0';
+    currentOperator = '';
+    operatorDisplay.textContent = '';
 });
 
+let clear = document.querySelector("#delete");
 
+clear.addEventListener('click', function()
+{
+    if(currentNum != '0')
+    {
+        currentNum = currentNum.slice(0, -1);
+        answerText.textContent = exponential(currentNum);
+        if(currentOperator)
+        {
+            currentOperator = '';
+        }
+    }
+});
+
+let negation = document.querySelector("#negation");
+
+negation.addEventListener('click', function()
+{
+    if(currentNum != '0')
+    {
+        currentNum = currentNum * -1;
+        answerText.textContent = exponential(currentNum);
+    }
+});
