@@ -72,10 +72,13 @@ function handleEqualsClick() {
     if (!oldNum || !currentNum) return;
     let result = operate(oldNum, currentNum, currentOperator);
     answerText.textContent = exponential(result);
-    currentNum = result.toString();
-    oldNum = "";
-    currentOperator = "";
-    operatorDisplay.textContent = "";
+    
+    if (result !== "null") {
+        currentNum = result.toString();
+        oldNum = "";
+        currentOperator = "";
+        operatorDisplay.textContent = "";
+    }
 }
 
 function handleClearClick() {
