@@ -1,3 +1,4 @@
+
 function add(a, b) {
     return a + b;
 }
@@ -24,8 +25,11 @@ function operate(num1, num2, operator) {
     if (operator === "+") return parseFloat(add(num1, num2).toFixed(8)); 
     if (operator === "-") return parseFloat(subtract(num1, num2).toFixed(8)); 
     if (operator === "*") return parseFloat(multiply(num1, num2).toFixed(8)); 
-    if (operator === "/" && num2 !== 0) return parseFloat(divide(num1, num2).toFixed(8)); 
-    return "Really Dude?";
+    if (operator === "/" && num2 !== 0) 
+        return parseFloat(divide(num1, num2).toFixed(8)); 
+    if (operator === "/" && num2 === 0) 
+        return "null"; 
+    
 }
 
 function fillText(num) {
@@ -41,77 +45,94 @@ function exponential(num) {
     return num.toString().slice(0, 9); 
 }
 
+function handleNumberClick(e) {
+    fillText(e.target.id);
+}
+
+function handleOperatorClick(e) {
+    setOperator(e.target.id);
+}
+
+function setOperator(operator) {
+    currentOperator = operator;
+    operatorDisplay.textContent = currentOperator;
+
+    if (!oldNum) {
+        oldNum = currentNum;
+        currentNum = "";
+    } else if (currentNum) {
+        let result = operate(oldNum, currentNum, currentOperator);
+        answerText.textContent = exponential(result);
+        oldNum = result;
+        currentNum = "";
+    }
+}
+
+function handleEqualsClick() {
+    if (!oldNum || !currentNum) return;
+    let result = operate(oldNum, currentNum, currentOperator);
+    answerText.textContent = exponential(result);
+    currentNum = result.toString();
+    oldNum = "";
+    currentOperator = "";
+    operatorDisplay.textContent = "";
+}
+
+function handleClearClick() {
+    currentNum = "";
+    oldNum = "";
+    answerText.textContent = '0';
+    currentOperator = "";
+    operatorDisplay.textContent = "";
+}
+
+function handleDeleteClick() {
+    if (currentNum) {
+        if (currentNum.length > 1) {
+            currentNum = currentNum.slice(0, -1);
+            answerText.textContent = exponential(currentNum);
+        } else {
+            currentNum = '';
+            answerText.textContent = '0';
+        }
+    }
+}
+
+function handleNegationClick() {
+    if (currentNum && currentNum !== '0') {
+        currentNum = (parseFloat(currentNum) * -1).toString();
+        answerText.textContent = exponential(currentNum);
+    } 
+}
+
 let numbers = document.querySelectorAll(".number");
 let operators = document.querySelectorAll(".operator");
 let answerText = document.querySelector(".answer");
 let operatorDisplay = document.querySelector(".display");
 
-operators.forEach((operator) => {
-    operator.addEventListener("click", function(e) {
-        currentOperator = e.target.id;
-        operatorDisplay.textContent = currentOperator;
-
-        if (!oldNum) {
-            oldNum = currentNum;
-            currentNum = "";
-        } else if (currentNum) {
-            let result = operate(oldNum, currentNum, currentOperator);
-            answerText.textContent = exponential(result);
-            oldNum = result;
-            currentNum = "";
-        }
-        
-    });
-});
-
-numbers.forEach((number) => {
-    number.addEventListener("click", function(e) {
-        fillText(e.target.id);
-    });
-});
+numbers.forEach(number => number.addEventListener("click", handleNumberClick));
+operators.forEach(operator => operator.addEventListener("click", handleOperatorClick));
 
 let equals = document.querySelector(".equal");
-equals.addEventListener('click', function() {
-    if (!oldNum || !currentNum) return;
-    let result = operate(oldNum, currentNum, currentOperator);
-    answerText.textContent = exponential(result);
-    currentNum = result.toString();
-    oldNum = '';
-    currentOperator = '';
-    operatorDisplay.textContent = '';
-});
+equals.addEventListener('click', handleEqualsClick);
 
 let clearFull = document.querySelector("#clear");
-clearFull.addEventListener('click', function() {
-    currentNum = '';
-    oldNum = '';
-    answerText.textContent = '0';
-    currentOperator = '';
-    operatorDisplay.textContent = '';
-});
+clearFull.addEventListener('click', handleClearClick);
 
 let clear = document.querySelector("#delete");
-
-clear.addEventListener('click', function()
-{
-    if(currentNum != '0')
-    {
-        currentNum = currentNum.slice(0, -1);
-        answerText.textContent = exponential(currentNum);
-        if(currentOperator)
-        {
-            currentOperator = '';
-        }
-    }
-});
+clear.addEventListener('click', handleDeleteClick);
 
 let negation = document.querySelector("#negation");
+negation.addEventListener('click', handleNegationClick);
 
-negation.addEventListener('click', function()
-{
-    if(currentNum != '0')
-    {
-        currentNum = currentNum * -1;
-        answerText.textContent = exponential(currentNum);
+window.addEventListener('keydown', function(e) {
+    if (e.key >= '0' && e.key <= '9') {
+        fillText(e.key);
+    } else if (['+', '-', '*', '/'].includes(e.key)) {
+        setOperator(e.key);
+    } else if (e.key === 'Backspace') {
+        handleDeleteClick();
+    } else if (e.key === '=' || e.key === 'Enter') {
+        handleEqualsClick();
     }
 });
