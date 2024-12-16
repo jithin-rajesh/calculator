@@ -138,4 +138,6 @@ window.addEventListener('keydown', function(e) {
     } else if (e.key === '=' || e.key === 'Enter') {
         handleEqualsClick();
     }
+    equals.focus();
 });
+
